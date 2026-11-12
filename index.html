@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft 3D - 256 Chunks, Crafting Table & Texturas HD</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <!-- Painel ESC (Menu de Pausa estilo Minecraft) -->
+    <div id="esc-menu">
+        <div class="mc-menu-container">
+            <h1 class="mc-title">MINECRAFT 3D</h1>
+            <p class="mc-subtitle">Edição 256 Chunks, Crafting Table & Texturas HD</p>
+
+            <div class="mc-buttons">
+                <button id="btn-resume" class="mc-btn primary">Voltar ao Jogo</button>
+
+                <div class="mc-options-grid">
+                    <div class="mc-option-box">
+                        <label for="opt-fov">Campo de Visão (FOV): <span id="val-fov">75</span></label>
+                        <input type="range" id="opt-fov" min="60" max="105" value="75">
+                    </div>
+
+                    <div class="mc-option-box">
+                        <label for="opt-sens">Sensibilidade Mouse: <span id="val-sens">100%</span></label>
+                        <input type="range" id="opt-sens" min="30" max="220" value="100">
+                    </div>
+
+                    <div class="mc-option-box">
+                        <label for="opt-render">Alcance de Chunks: <span id="val-render">48 blocos</span></label>
+                        <input type="range" id="opt-render" min="32" max="80" step="8" value="48">
+                    </div>
+
+                    <button id="btn-respawn" class="mc-btn">Teleportar ao Spawn</button>
+                </div>
+
+                <button id="btn-regen" class="mc-btn danger">Gerar Novo Mundo (256 Chunks)</button>
+            </div>
+
+            <div class="mc-controls-footer">
+                <span><b>WASD</b> Mover</span>
+                <span><b>SHIFT</b> Correr</span>
+                <span><b>CTRL</b> Agachar</span>
+                <span><b>B</b> Inventário</span>
+                <span><b>Botão Dir.</b> Usar Mesa</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de Game Over -->
+    <div id="death-screen" class="hidden">
+        <div class="death-box">
+            <h1>VOCÊ MORREU!</h1>
+            <p>Os monstros das cavernas derrotaram você.</p>
+            <button id="btn-revive" class="mc-btn primary">Renascer no Spawn</button>
+        </div>
+    </div>
+
+    <!-- Inventário Clássico (Tecla B) -->
+    <div id="inventory-modal" class="hidden">
+        <div class="mc-inv-window">
+            <div class="mc-inv-top">
+                <div class="mc-armor-col">
+                    <div class="mc-slot armor-placeholder" title="Capacete">🪖</div>
+                    <div class="mc-slot armor-placeholder" title="Peitoral">👕</div>
+                    <div class="mc-slot armor-placeholder" title="Calças">👖</div>
+                    <div class="mc-slot armor-placeholder" title="Botas">👢</div>
+                </div>
+
+                <div class="mc-player-preview">
+                    <div class="steve-model">
+                        <div class="steve-head">
+                            <div class="steve-eyes"><span></span><span></span></div>
+                            <div class="steve-mouth"></div>
+                        </div>
+                        <div class="steve-body">
+                            <div class="steve-arm left"></div>
+                            <div class="steve-torso"></div>
+                            <div class="steve-arm right"></div>
+                        </div>
+                        <div class="steve-legs">
+                            <div class="steve-leg"></div>
+                            <div class="steve-leg"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mc-offhand-col">
+                    <div class="mc-slot armor-placeholder" title="Escudo">🛡️</div>
+                </div>
+
+                <div class="mc-crafting-area">
+                    <div class="mc-inv-label">Fabricação (2×2)</div>
+                    <div class="mc-craft-row">
+                        <div id="craft-grid-2x2" class="mc-craft-2x2"></div>
+                        <div class="mc-craft-arrow">➡</div>
+                        <div id="craft-result-slot" class="mc-slot"></div>
+                    </div>
+                    <div class="mc-recipe-book-row">
+                        <button id="toggle-recipes-btn" class="mc-book-btn" title="Livro de Receitas">📗</button>
+                        <span class="mc-hint-text">Faça Tábuas e uma Crafting Table (4 Tábuas)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="quick-recipes-panel" class="hidden"></div>
+            <div id="main-inventory-grid" class="mc-grid-9"></div>
+            <div id="inv-hotbar-grid" class="mc-grid-9 mc-inv-hotbar-sep"></div>
+        </div>
+    </div>
+
+    <!-- Modal da Bancada de Trabalho 3x3 (Crafting Table) -->
+    <div id="crafting-table-modal" class="hidden">
+        <div class="mc-inv-window">
+            <div class="mc-ct-header">
+                <span class="mc-inv-label">Bancada de Trabalho (3×3)</span>
+                <button id="close-ct-btn" class="mc-close-x">✕</button>
+            </div>
+
+            <div class="mc-ct-top">
+                <div id="craft-grid-3x3" class="mc-craft-3x3"></div>
+                <div class="mc-craft-arrow">➡</div>
+                <div id="ct-result-slot" class="mc-slot"></div>
+                <div class="mc-ct-recipes-box">
+                    <div class="mc-ct-rec-title">📗 Receitas 3×3</div>
+                    <div id="ct-recipes-list" class="mc-ct-rec-list"></div>
+                </div>
+            </div>
+
+            <div id="ct-main-inventory-grid" class="mc-grid-9"></div>
+            <div id="ct-inv-hotbar-grid" class="mc-grid-9 mc-inv-hotbar-sep"></div>
+        </div>
+    </div>
+
+    <!-- Item flutuante preso ao cursor enquanto move no inventário -->
+    <div id="cursor-item" class="hidden"></div>
+
+    <!-- Mira Central -->
+    <div id="crosshair">+</div>
+
+    <!-- HUD Superior -->
+    <div id="top-hud">
+        <div id="debug-hud">FPS: 60 | XYZ: 0 / 0 / 0 | Mundo: 256 Chunks</div>
+        <div id="time-hud">☀️ Dia 1 - 08:00</div>
+    </div>
+
+    <!-- Barra de Progresso de Mineração -->
+    <div id="mining-bar-container" class="hidden">
+        <div id="mining-bar-fill"></div>
+    </div>
+
+    <!-- Status de Sobrevivência -->
+    <div id="survival-hud">
+        <div id="health-bar" class="stat-bar">❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️</div>
+        <div id="hunger-bar" class="stat-bar">🍗🍗🍗🍗🍗🍗🍗🍗🍗🍗</div>
+    </div>
+
+    <!-- Hotbar Inferior na Tela -->
+    <div id="hotbar"></div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>

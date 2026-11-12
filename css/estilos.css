@@ -1,0 +1,585 @@
+* {
+    box-sizing: border-box;
+    user-select: none;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #111;
+}
+
+canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* =========================================
+   PAINEL ESC & GAME OVER
+========================================= */
+#esc-menu, #death-screen {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 15, 20, 0.78);
+    backdrop-filter: blur(3px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 40;
+}
+
+#death-screen {
+    background: rgba(120, 0, 0, 0.75);
+    z-index: 50;
+}
+
+.mc-menu-container, .death-box {
+    width: 580px;
+    background: #2c2c2c;
+    border: 4px solid #141414;
+    box-shadow: inset 3px 3px #4a4a4a, inset -3px -3px #1a1a1a, 0 20px 50px rgba(0,0,0,0.85);
+    padding: 28px 36px;
+    text-align: center;
+    color: #fff;
+}
+
+.death-box h1 {
+    color: #ff5555;
+    font-size: 38px;
+    margin: 0 0 10px 0;
+    text-shadow: 3px 3px #000;
+}
+
+.mc-title {
+    margin: 0;
+    font-size: 38px;
+    color: #d0d0d0;
+    text-shadow: 4px 4px #181818;
+    letter-spacing: 3px;
+}
+
+.mc-subtitle {
+    margin: 4px 0 24px 0;
+    color: #ffff55;
+    font-size: 14px;
+    font-weight: bold;
+    text-shadow: 2px 2px #000;
+}
+
+.mc-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mc-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background: #6e6e6e;
+    border: 3px solid #1b1b1b;
+    box-shadow: inset 2px 2px #9c9c9c, inset -2px -2px #424242;
+    text-shadow: 2px 2px #222;
+    cursor: pointer;
+}
+
+.mc-btn:hover {
+    background: #7e88bf;
+}
+
+.mc-btn.primary {
+    background: #4b8b3b;
+    box-shadow: inset 2px 2px #6ec458, inset -2px -2px #2d5723;
+}
+
+.mc-btn.danger {
+    background: #8f3434;
+    box-shadow: inset 2px 2px #c45252, inset -2px -2px #591d1d;
+}
+
+.mc-options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.mc-option-box {
+    background: #424242;
+    border: 2px solid #1b1b1b;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12px;
+    text-align: left;
+}
+
+.mc-option-box input[type="range"] {
+    width: 100%;
+    accent-color: #55ff55;
+    cursor: pointer;
+}
+
+.mc-controls-footer {
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 2px solid #444;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #bbb;
+}
+
+/* =========================================
+   INVENTÁRIO (B) & CRAFTING TABLE (3x3)
+========================================= */
+#inventory-modal, #crafting-table-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 35;
+}
+
+.mc-inv-window {
+    background: #c6c6c6;
+    border: 4px solid #1e1e1e;
+    box-shadow: inset 4px 4px #ffffff, inset -4px -4px #555555, 0 20px 50px rgba(0, 0, 0, 0.9);
+    padding: 18px;
+    width: 500px;
+    color: #3f3f3f;
+}
+
+.mc-inv-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.mc-armor-col {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mc-offhand-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 188px;
+}
+
+.mc-player-preview {
+    width: 112px;
+    height: 188px;
+    background: #000000;
+    border: 3px solid #373737;
+    box-shadow: inset 2px 2px #000, inset -2px -2px #777;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.steve-model {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: scale(1.15);
+}
+
+.steve-head {
+    width: 32px;
+    height: 32px;
+    background: #b5835a;
+    border-top: 8px solid #3b2416;
+    position: relative;
+}
+
+.steve-eyes {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 4px 0 4px;
+}
+
+.steve-eyes span {
+    width: 6px;
+    height: 4px;
+    background: #fff;
+    border-right: 3px solid #3b3fa8;
+}
+
+.steve-mouth {
+    width: 12px;
+    height: 4px;
+    background: #6e422c;
+    margin: 4px auto 0 auto;
+}
+
+.steve-body {
+    display: flex;
+    align-items: flex-start;
+}
+
+.steve-torso {
+    width: 32px;
+    height: 46px;
+    background: #00a8a8;
+}
+
+.steve-arm {
+    width: 12px;
+    height: 46px;
+    background: #b5835a;
+    border-top: 12px solid #00a8a8;
+}
+
+.steve-legs {
+    display: flex;
+}
+
+.steve-leg {
+    width: 16px;
+    height: 46px;
+    background: #33399c;
+    border-bottom: 6px solid #4a4a4a;
+}
+
+.mc-crafting-area {
+    flex: 1;
+    padding-left: 10px;
+}
+
+.mc-inv-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #3f3f3f;
+    margin-bottom: 8px;
+}
+
+.mc-craft-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mc-craft-2x2 {
+    display: grid;
+    grid-template-columns: repeat(2, 44px);
+    gap: 3px;
+}
+
+.mc-craft-3x3 {
+    display: grid;
+    grid-template-columns: repeat(3, 44px);
+    gap: 3px;
+}
+
+.mc-ct-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.mc-close-x {
+    background: #8f3434;
+    color: #fff;
+    border: 2px solid #222;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 3px 8px;
+}
+
+.mc-ct-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.mc-ct-recipes-box {
+    flex: 1;
+    background: #a8a8a8;
+    border: 2px solid #555;
+    padding: 6px;
+    height: 138px;
+    overflow-y: auto;
+}
+
+.mc-ct-rec-title {
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: #222;
+}
+
+.mc-ct-rec-list {
+    font-size: 10px;
+    line-height: 1.45;
+    color: #1a1a1a;
+}
+
+.mc-craft-arrow {
+    font-size: 24px;
+    font-weight: bold;
+    color: #666;
+}
+
+.mc-recipe-book-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.mc-book-btn {
+    width: 44px;
+    height: 36px;
+    background: #c6c6c6;
+    border: 3px solid #373737;
+    box-shadow: inset 2px 2px #fff, inset -2px -2px #555;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.mc-book-btn:hover {
+    background: #d8d8d8;
+}
+
+.mc-hint-text {
+    font-size: 11px;
+    color: #444;
+    line-height: 1.2;
+}
+
+.mc-grid-9 {
+    display: grid;
+    grid-template-columns: repeat(9, 44px);
+    gap: 3px;
+    justify-content: center;
+}
+
+.mc-inv-hotbar-sep {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 2px solid #8b8b8b;
+}
+
+.mc-slot {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    background: #8b8b8b;
+    border-top: 3px solid #373737;
+    border-left: 3px solid #373737;
+    border-right: 3px solid #ffffff;
+    border-bottom: 3px solid #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.mc-slot:hover {
+    background: #a5a5a5;
+}
+
+.mc-slot.armor-placeholder {
+    opacity: 0.55;
+    font-size: 18px;
+    cursor: default;
+}
+
+.mc-slot-qty {
+    position: absolute;
+    bottom: 1px;
+    right: 3px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 1.5px 1.5px #000000;
+}
+
+#quick-recipes-panel {
+    background: #a8a8a8;
+    border: 2px solid #555;
+    padding: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.quick-rec-btn {
+    background: #6e6e6e;
+    color: #fff;
+    border: 2px solid #222;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.quick-rec-btn:hover {
+    background: #4b8b3b;
+}
+
+#cursor-item {
+    position: fixed;
+    pointer-events: none;
+    z-index: 60;
+    font-size: 26px;
+    transform: translate(-50%, -50%);
+    text-shadow: 2px 2px #000;
+}
+
+/* =========================================
+   HUD DO JOGO
+========================================= */
+#crosshair {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 26px;
+    font-weight: bold;
+    pointer-events: none;
+    text-shadow: 1px 1px 2px #000;
+    z-index: 10;
+}
+
+#top-hud {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 10;
+}
+
+#debug-hud, #time-hud {
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    padding: 6px 12px;
+    border: 2px solid #444;
+    font-size: 13px;
+}
+
+#mining-bar-container {
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140px;
+    height: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #fff;
+    z-index: 12;
+}
+
+#mining-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: #55ff55;
+}
+
+#survival-hud {
+    position: fixed;
+    bottom: 84px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 590px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.stat-bar {
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px #000;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+#hotbar {
+    position: fixed;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 5px;
+    background: rgba(25, 25, 25, 0.88);
+    padding: 6px;
+    border: 3px solid #4a4a4a;
+    z-index: 10;
+}
+
+.slot {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    background: #8b8b8b;
+    border: 3px solid #373737;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-shadow: 1px 1px #000;
+}
+
+.slot.active {
+    border-color: #ffffff;
+    background: #b5b5b5;
+    transform: scale(1.08);
+    z-index: 2;
+}
+
+.slot-key {
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    font-size: 10px;
+    color: #eee;
+}
+
+.slot-icon {
+    font-size: 22px;
+    line-height: 1;
+}
+
+.slot-name {
+    font-size: 9px;
+    margin-top: 2px;
+    text-align: center;
+}
+
+.slot-count {
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #ffff55;
+}
